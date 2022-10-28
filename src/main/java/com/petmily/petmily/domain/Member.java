@@ -1,5 +1,6 @@
 package com.petmily.petmily.domain;
 
+import com.petmily.petmily.dto.MemberJoinDto;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -38,5 +39,16 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Like> likeList = new ArrayList<>();
+
+    public Member(String email, String password, String nickname, LocalDateTime createdDate) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.createdDate = createdDate;
+    }
+
+    public static Member getMember(MemberJoinDto memberDto) {
+        return new Member(memberDto.getEmail(), memberDto.getPassword(), memberDto.getNickname(), LocalDateTime.now());
+    }
 
 }
