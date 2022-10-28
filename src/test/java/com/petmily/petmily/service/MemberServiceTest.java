@@ -24,7 +24,10 @@ class MemberServiceTest {
 
     @Test
     void save() {
-        MemberJoinDto memberJoinDto = new MemberJoinDto("salbyul@korean", "1111", "salbyul");
+        MemberJoinDto memberJoinDto = new MemberJoinDto();
+        memberJoinDto.setEmail("google@google.com");
+        memberJoinDto.setNickname("salbyul");
+        memberJoinDto.setPassword("1111");
         Long savedId = memberService.join(memberJoinDto);
         Member findMember = memberRepository.findById(savedId);
         assertThat(savedId).isEqualTo(findMember.getId());

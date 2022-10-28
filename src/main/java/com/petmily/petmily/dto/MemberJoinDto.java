@@ -1,22 +1,25 @@
 package com.petmily.petmily.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @ToString
-@NoArgsConstructor
+@Setter
 public class MemberJoinDto {
 
+    @NotNull
+    @Email
     private String email;
+    @NotNull
+    @Length(min = 8, max = 20)
     private String password;
+    @NotNull
+    @Length(min = 5, max = 15)
     private String nickname;
-
-    public MemberJoinDto(String email, String password, String nickname) {
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-    }
-
 }
