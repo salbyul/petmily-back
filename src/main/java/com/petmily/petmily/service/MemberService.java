@@ -2,6 +2,7 @@ package com.petmily.petmily.service;
 
 import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.dto.MemberJoinDto;
+import com.petmily.petmily.dto.MemberLoginDto;
 import com.petmily.petmily.repository.IMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class MemberService {
 
     @Transactional
     public Long join(MemberJoinDto memberDto) {
+        log.info("JOIN memberDto: {}", memberDto.getEmail());
         validateDuplicateEmail(memberDto.getEmail());
         validateDuplicateNickname(memberDto.getNickname());
         Member member = Member.getMember(memberDto);
@@ -40,5 +42,20 @@ public class MemberService {
         if (findMembers.size() != 0) {
             throw new IllegalArgumentException("이메일 중복");
         }
+    }
+
+    public Member login(MemberLoginDto memberLoginDto) {
+        Member findMember = findByEmail(memberLoginDto.getEmail());
+        if (findMember == null) throw new IllegalArgumentException("유효하지 않는 이메일입니다.");
+        if (!findMember.getPassword().equals(memberLoginDto.getPassword())) throw new IllegalArgumentException("유효하지 않는 비밀번호입니다.");
+        return findMember;
+    }
+
+    public Member findByEmail(String email) {
+        List<Member> findMembers = memberRepository.findByEmail(email);
+        if (findMembers.size() != 1) {
+            throw new IllegalArgumentException("유효하지 않는 이메일입니다.");
+        }
+        return findMembers.get(0);
     }
 }
