@@ -2,8 +2,11 @@ package com.petmily.petmily.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
+@NoArgsConstructor
 public class MemberJoinDto {
 
     private String email;
@@ -15,4 +18,5 @@ public class MemberJoinDto {
         this.password = password;
         this.nickname = nickname;
     }
+
 }
