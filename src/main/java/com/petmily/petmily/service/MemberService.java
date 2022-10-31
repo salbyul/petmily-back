@@ -4,6 +4,7 @@ import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.dto.MemberJoinDto;
 import com.petmily.petmily.dto.MemberLoginDto;
 import com.petmily.petmily.repository.IMemberRepository;
+import com.petmily.petmily.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 public class MemberService {
 
     private final IMemberRepository memberRepository;
+    private final JwtTokenProvider tokenProvider;
 
     @Transactional
     public Long join(MemberJoinDto memberDto) {
@@ -57,5 +59,14 @@ public class MemberService {
             throw new IllegalArgumentException("유효하지 않는 이메일입니다.");
         }
         return findMembers.get(0);
+    }
+
+    public String findByJwtToken(String token) {
+        String email = tokenProvider.getEmail(token);
+        List<Member> findMembers = memberRepository.findByEmail(email);
+        if (findMembers.size() != 1) {
+            throw new IllegalStateException("잘못된 토큰입니다.");
+        }
+        return findMembers.get(0).getNickname();
     }
 }
