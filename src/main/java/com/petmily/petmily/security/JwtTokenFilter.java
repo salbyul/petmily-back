@@ -33,10 +33,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 //        System.out.println("-----------------------------------------");
 //        System.out.println(request.getHeader("access-control-request-headers"));
         if (token != null && token.startsWith("Bearer ")) {
-            log.info("before processing token: {}", token);
             String jwtToken = token.split(" ")[1].trim();
-            log.info("after processing token: {}", jwtToken);
-            log.info("body: {}", jwtTokenProvider.getNickname(jwtToken));
             if (jwtTokenProvider.validateToken(jwtToken)) {
                 Authentication authentication = jwtTokenProvider.authentication(jwtToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
