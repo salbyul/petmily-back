@@ -25,6 +25,8 @@ public class Member {
 
     private String nickname;
 
+    private String statusMessage;
+
     private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "member")

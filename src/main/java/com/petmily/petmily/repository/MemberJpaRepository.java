@@ -36,4 +36,12 @@ public class MemberJpaRepository implements IMemberRepository{
                 .setParameter("nickname", nickname)
                 .getResultList();
     }
+
+    @Override
+    public List<Member> findAllByNicknameExceptMe(String nickname, String target) {
+        return em.createQuery("select m from Member m where m.nickname like :target and m.nickname <> :nickname")
+                .setParameter("target", "%" + target + "%")
+                .setParameter("nickname", nickname)
+                .getResultList();
+    }
 }

@@ -35,7 +35,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider, memberService), UsernamePasswordAuthenticationFilter.class);
         http
                 .csrf().disable()
                 .formLogin().disable();
@@ -54,8 +54,13 @@ public class SecurityConfig implements WebMvcConfigurer {
     public void init() {
         MemberJoinDto memberJoinDto = new MemberJoinDto();
         memberJoinDto.setEmail("asdf@asdf.com");
-        memberJoinDto.setNickname("salbyul");
+        memberJoinDto.setNickname("memberA");
         memberJoinDto.setPassword("asdfasdf");
         memberService.join(memberJoinDto);
+        MemberJoinDto memberJoinDtoB = new MemberJoinDto();
+        memberJoinDtoB.setEmail("google@google.com");
+        memberJoinDtoB.setNickname("memberB");
+        memberJoinDtoB.setPassword("asdfasdf");
+        memberService.join(memberJoinDtoB);
     }
 }

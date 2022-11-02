@@ -3,6 +3,7 @@ package com.petmily.petmily.service;
 import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.dto.MemberJoinDto;
 import com.petmily.petmily.dto.MemberLoginDto;
+import com.petmily.petmily.dto.MemberProfileDto;
 import com.petmily.petmily.repository.IMemberRepository;
 import com.petmily.petmily.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -68,5 +69,26 @@ public class MemberService {
             throw new IllegalStateException("잘못된 토큰입니다.");
         }
         return findMembers.get(0).getNickname();
+    }
+
+    public Member findByNickname(String nickname) {
+        List<Member> findMembers = memberRepository.findByNickname(nickname);
+        if (findMembers.size() != 1) {
+            throw new IllegalArgumentException("잘못된 닉네임입니다.");
+        }
+        return findMembers.get(0);
+    }
+
+    public List<Member> findAllByNicknameExceptMe(String nickname, String target) {
+        return memberRepository.findAllByNicknameExceptMe(nickname, target);
+    }
+
+    public MemberProfileDto nicknameToProfileDto(String nickname) {
+        List<Member> findMembers = memberRepository.findByNickname(nickname);
+        if (findMembers.size() != 1) {
+            throw new IllegalArgumentException("잘못된 닉네임입니다.");
+        }
+        Member findMember = findMembers.get(0);
+        return MemberProfileDto.getMemberProfileDto(findMember);
     }
 }

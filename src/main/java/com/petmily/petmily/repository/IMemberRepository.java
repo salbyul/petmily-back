@@ -13,4 +13,6 @@ public interface IMemberRepository {
     List<Member> findByEmail(String email);
 
     List<Member> findByNickname(String nickname);
+
+    List<Member> findAllByNicknameExceptMe(String nickname, String targetNickname);
 }
