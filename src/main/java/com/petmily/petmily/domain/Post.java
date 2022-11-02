@@ -31,6 +31,9 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<Notification> notificationList = new ArrayList<>();
+
     private LocalDateTime createdDate;
 
     private LocalDateTime modifiedDate;

@@ -42,7 +42,11 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Like> likeList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "targetMember")
+    private List<Notification> notificationList = new ArrayList<>();
+
     public Member(String email, String password, String nickname, LocalDateTime createdDate) {
+
         this.email = email;
         this.password = password;
         this.nickname = nickname;
