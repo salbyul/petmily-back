@@ -1,4 +1,4 @@
-package com.petmily.petmily.web.controller;
+package com.petmily.petmily.web.controller.home;
 
 import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.dto.MemberJoinDto;

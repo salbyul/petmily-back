@@ -2,7 +2,7 @@ package com.petmily.petmily.repository;
 
 import com.petmily.petmily.domain.Follow;
 import com.petmily.petmily.domain.Member;
-import com.petmily.petmily.exception.FollowException;
+import com.petmily.petmily.exception.follow.FollowException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -39,7 +39,7 @@ public class FollowJpaRepository implements IFollowRepository {
         int rows = query.executeUpdate();
         if (rows != 1) {
             log.error("UnFollow ERROR!!");
-            throw new FollowException("UnFollow error!!");
+            throw new FollowException("unfollow error");
         }
     }
 }

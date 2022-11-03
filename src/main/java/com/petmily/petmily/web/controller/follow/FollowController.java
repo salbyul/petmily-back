@@ -1,4 +1,4 @@
-package com.petmily.petmily.web.controller;
+package com.petmily.petmily.web.controller.follow;
 
 import com.petmily.petmily.domain.Follow;
 import com.petmily.petmily.domain.Member;

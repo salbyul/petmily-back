@@ -1,10 +1,10 @@
 package com.petmily.petmily.service;
 
 import com.petmily.petmily.domain.Member;
-import com.petmily.petmily.dto.MemberJoinDto;
-import com.petmily.petmily.dto.MemberLoginDto;
-import com.petmily.petmily.dto.MemberProfileDto;
+import com.petmily.petmily.dto.*;
+import com.petmily.petmily.exception.member.MemberException;
 import com.petmily.petmily.repository.IMemberRepository;
+import com.petmily.petmily.security.JwtTokenException;
 import com.petmily.petmily.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +66,7 @@ public class MemberService {
         String email = tokenProvider.getEmail(token);
         List<Member> findMembers = memberRepository.findByEmail(email);
         if (findMembers.size() != 1) {
-            throw new IllegalStateException("잘못된 토큰입니다.");
+            throw new JwtTokenException("유효하지 않은 토큰");
         }
         return findMembers.get(0).getNickname();
     }
@@ -74,7 +74,7 @@ public class MemberService {
     public Member findByNickname(String nickname) {
         List<Member> findMembers = memberRepository.findByNickname(nickname);
         if (findMembers.size() != 1) {
-            throw new IllegalArgumentException("잘못된 닉네임입니다.");
+            throw new MemberException("유효하지 않은 닉네임");
         }
         return findMembers.get(0);
     }
@@ -84,11 +84,31 @@ public class MemberService {
     }
 
     public MemberProfileDto nicknameToProfileDto(String nickname) {
+        Member findMember = findByNickname(nickname);
+        return new MemberProfileDto(findMember.getEmail(), findMember.getNickname(), findMember.getStatusMessage());
+    }
+
+    @Transactional
+    public void modifyMember(String nickname, MemberModifyDto memberModifyDto) {
         List<Member> findMembers = memberRepository.findByNickname(nickname);
         if (findMembers.size() != 1) {
-            throw new IllegalArgumentException("잘못된 닉네임입니다.");
+            throw new JwtTokenException("유효하지 않은 토큰");
         }
         Member findMember = findMembers.get(0);
-        return MemberProfileDto.getMemberProfileDto(findMember);
+        if (nickname.equals(memberModifyDto.getNickname())) {
+            findMember.modifyMember(memberModifyDto.getNickname(), memberModifyDto.getStatusMessage());
+            return;
+        }
+        List<Member> findMembersByDto = memberRepository.findByNickname(memberModifyDto.getNickname());
+        if (findMembersByDto.size() != 0) {
+            log.info("닉네임 중복");
+            throw new MemberException("닉네임 중복");
+        }
+
+        findMember.modifyMember(memberModifyDto.getNickname(), memberModifyDto.getStatusMessage());
+    }
+
+    public MemberSidebarDto MemberSidebarDtoToMember(Member member) {
+        return new MemberSidebarDto(member.getNickname(), member.getStatusMessage());
     }
 }

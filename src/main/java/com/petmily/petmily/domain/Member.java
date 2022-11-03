@@ -19,10 +19,12 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
 
+    @Column(unique = true)
     private String nickname;
 
     private String statusMessage;
@@ -53,10 +55,15 @@ public class Member {
         this.password = password;
         this.nickname = nickname;
         this.createdDate = createdDate;
+        this.statusMessage = "상태메시지를 입력해주세요.";
     }
 
     public static Member getMember(MemberJoinDto memberDto) {
         return new Member(memberDto.getEmail(), memberDto.getPassword(), memberDto.getNickname(), LocalDateTime.now());
     }
 
+    public void modifyMember(String nickname, String statusMessage) {
+        this.nickname = nickname;
+        this.statusMessage = statusMessage;
+    }
 }

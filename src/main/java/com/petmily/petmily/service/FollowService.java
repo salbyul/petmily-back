@@ -2,7 +2,7 @@ package com.petmily.petmily.service;
 
 import com.petmily.petmily.domain.Follow;
 import com.petmily.petmily.domain.Member;
-import com.petmily.petmily.exception.FollowException;
+import com.petmily.petmily.exception.follow.FollowException;
 import com.petmily.petmily.repository.IFollowRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

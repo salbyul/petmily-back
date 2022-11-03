@@ -1,9 +1,6 @@
-package com.petmily.petmily.exception;
-
-import java.io.PrintStream;
+package com.petmily.petmily.exception.follow;
 
 public class FollowException extends RuntimeException {
-
 
     public FollowException() {
         super();
@@ -23,10 +20,5 @@ public class FollowException extends RuntimeException {
 
     protected FollowException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-    }
-
-    @Override
-    public void printStackTrace() {
-        super.printStackTrace();
     }
 }

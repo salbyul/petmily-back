@@ -1,22 +1,24 @@
 package com.petmily.petmily.dto;
 
 import com.petmily.petmily.domain.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
+@AllArgsConstructor
 public class MemberProfileDto {
 
+    @NotNull
+    @NotBlank
     private String email;
+
+    @NotNull
+    @NotBlank
     private String nickname;
     private String statusMessage;
-
-    public static MemberProfileDto getMemberProfileDto(Member member) {
-        MemberProfileDto dto = new MemberProfileDto();
-        dto.setEmail(member.getEmail());
-        dto.setNickname(member.getNickname());
-        dto.setStatusMessage(member.getStatusMessage());
-        return dto;
-    }
 }
