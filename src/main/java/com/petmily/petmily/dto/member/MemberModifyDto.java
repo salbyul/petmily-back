@@ -1,23 +1,20 @@
-package com.petmily.petmily.dto;
+package com.petmily.petmily.dto.member;
 
-import com.petmily.petmily.domain.Member;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@AllArgsConstructor
-public class MemberProfileDto {
+@ToString
+public class MemberModifyDto {
 
     @NotNull
-    @NotBlank
-    private String email;
-
-    @NotNull
+    @Length(min = 5, max = 15)
     @NotBlank
     private String nickname;
     private String statusMessage;

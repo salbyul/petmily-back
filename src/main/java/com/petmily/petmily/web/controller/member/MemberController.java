@@ -1,9 +1,9 @@
 package com.petmily.petmily.web.controller.member;
 
 import com.petmily.petmily.domain.Member;
-import com.petmily.petmily.dto.MemberModifyDto;
-import com.petmily.petmily.dto.MemberProfileDto;
-import com.petmily.petmily.dto.MemberSidebarDto;
+import com.petmily.petmily.dto.member.MemberModifyDto;
+import com.petmily.petmily.dto.member.MemberProfileDto;
+import com.petmily.petmily.dto.member.MemberSidebarDto;
 import com.petmily.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

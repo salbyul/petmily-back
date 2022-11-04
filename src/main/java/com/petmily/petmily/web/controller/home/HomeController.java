@@ -1,8 +1,8 @@
 package com.petmily.petmily.web.controller.home;
 
 import com.petmily.petmily.domain.Member;
-import com.petmily.petmily.dto.MemberJoinDto;
-import com.petmily.petmily.dto.MemberLoginDto;
+import com.petmily.petmily.dto.member.MemberJoinDto;
+import com.petmily.petmily.dto.member.MemberLoginDto;
 import com.petmily.petmily.repository.IMemberRepository;
 import com.petmily.petmily.security.JwtTokenProvider;
 import com.petmily.petmily.service.MemberService;

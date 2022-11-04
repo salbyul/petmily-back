@@ -1,6 +1,6 @@
 package com.petmily.petmily.domain;
 
-import com.petmily.petmily.dto.MemberJoinDto;
+import com.petmily.petmily.dto.member.MemberJoinDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.petmily.petmily.dto;
+package com.petmily.petmily.dto.member;
 
 import lombok.Getter;
 import lombok.ToString;

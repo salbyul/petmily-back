@@ -1,7 +1,7 @@
 package com.petmily.petmily.service;
 
 import com.petmily.petmily.domain.Member;
-import com.petmily.petmily.dto.MemberJoinDto;
+import com.petmily.petmily.dto.member.MemberJoinDto;
 import com.petmily.petmily.repository.IMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +11,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @Transactional

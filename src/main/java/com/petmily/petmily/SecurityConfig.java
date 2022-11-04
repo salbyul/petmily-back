@@ -1,6 +1,6 @@
 package com.petmily.petmily;
 
-import com.petmily.petmily.dto.MemberJoinDto;
+import com.petmily.petmily.dto.member.MemberJoinDto;
 import com.petmily.petmily.security.JwtTokenFilter;
 import com.petmily.petmily.security.JwtTokenProvider;
 import com.petmily.petmily.service.MemberService;

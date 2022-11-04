@@ -1,7 +1,7 @@
 package com.petmily.petmily.service;
 
 import com.petmily.petmily.domain.Member;
-import com.petmily.petmily.dto.*;
+import com.petmily.petmily.dto.member.*;
 import com.petmily.petmily.exception.member.MemberException;
 import com.petmily.petmily.repository.IMemberRepository;
 import com.petmily.petmily.security.JwtTokenException;
