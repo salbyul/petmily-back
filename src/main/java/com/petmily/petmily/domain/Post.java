@@ -19,13 +19,14 @@ public class Post {
     private Long id;
 
     @Embedded
-    private Content content;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private String hashtag;
+    @OneToMany(mappedBy = "post")
+    private List<Hashtag> hashtag;
 
     @OneToMany(mappedBy = "post")
     private List<Like> likeList  = new ArrayList<>();
@@ -39,17 +40,19 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Notification> notificationList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<Image> imageList = new ArrayList<>();
+
     private LocalDateTime createdDate;
 
     private LocalDateTime modifiedDate;
 
-    public Post(Content content, Member member, String hashtag) {
+    public Post(String content, Member member) {
         this.content = content;
         this.member = member;
-        this.hashtag = hashtag;
     }
 
     public static Post getPost(PostSaveDto postSaveDto, Member member) {
-        return new Post(postSaveDto.getContent(), member, postSaveDto.getHashtag());
+        return new Post(postSaveDto.getContent(), member);
     }
 }

@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtTokenProvider implements InitializingBean {
 
-    private final String secretKey = "vamilloMacbookProAnyWhereS2TwoOfSideMonitorThisIsSoFreakingGood";
+    @Value("${secret.key}")
+    private String secretKey;
     private Key key;
     private final Long accessTime = 360000 * 1000L;
     private final MemberDetailService memberDetailService;
