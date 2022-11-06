@@ -14,6 +14,4 @@ public class PostSaveDto {
     @NotNull
     private String content;
 
-    private List<Hashtag> hashtag;
-
 }

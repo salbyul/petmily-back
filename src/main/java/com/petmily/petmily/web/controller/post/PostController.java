@@ -10,12 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -28,8 +28,14 @@ public class PostController {
     private final MemberService memberService;
 
     @PostMapping("/save")
-    public ResponseEntity savePost(@Validated PostSaveDto postSaveDto, HttpServletRequest request) {
-        postService.save(postSaveDto, request);
+    public ResponseEntity savePost(@Validated PostSaveDto postSaveDto, @RequestPart(value = "files") List<MultipartFile> multipartFiles) throws ServletException, IOException {
+        for (MultipartFile multipartFile : multipartFiles) {
+            System.out.println(multipartFile.getOriginalFilename());
+        }
+        /**
+         * form-data에 array를 보내는 방법은 없다.
+         * 그러므로 스트링으로 모두 받고 리스트로 만드는 로직을 만들어야함!
+         */
         return new ResponseEntity(HttpStatus.OK);
     }
 

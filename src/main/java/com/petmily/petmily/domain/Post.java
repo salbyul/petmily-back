@@ -18,7 +18,6 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @Embedded
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,7 +25,7 @@ public class Post {
     private Member member;
 
     @OneToMany(mappedBy = "post")
-    private List<Hashtag> hashtag;
+    private List<Hashtag> hashtag = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
     private List<Like> likeList  = new ArrayList<>();
