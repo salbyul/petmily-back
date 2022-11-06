@@ -1,5 +1,8 @@
 package com.petmily.petmily.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerator;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.petmily.petmily.dto.post.PostSaveDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Post {
 
     @Id @GeneratedValue
@@ -49,6 +53,7 @@ public class Post {
     public Post(String content, Member member) {
         this.content = content;
         this.member = member;
+        this.createdDate = LocalDateTime.now();
     }
 
     public static Post getPost(PostSaveDto postSaveDto, Member member) {

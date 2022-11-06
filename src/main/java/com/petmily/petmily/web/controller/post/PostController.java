@@ -3,6 +3,9 @@ package com.petmily.petmily.web.controller.post;
 import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.domain.Post;
 import com.petmily.petmily.dto.post.PostSaveDto;
+import com.petmily.petmily.dto.post.PostShowDto;
+import com.petmily.petmily.service.HashtagService;
+import com.petmily.petmily.service.ImageService;
 import com.petmily.petmily.service.MemberService;
 import com.petmily.petmily.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -26,25 +29,21 @@ public class PostController {
 
     private final PostService postService;
     private final MemberService memberService;
+    private final HashtagService hashtagService;
+    private final ImageService imageService;
 
     @PostMapping("/save")
-    public ResponseEntity savePost(@Validated PostSaveDto postSaveDto, @RequestPart(value = "files") List<MultipartFile> multipartFiles) throws ServletException, IOException {
-        for (MultipartFile multipartFile : multipartFiles) {
-            System.out.println(multipartFile.getOriginalFilename());
-        }
-        /**
-         * form-data에 array를 보내는 방법은 없다.
-         * 그러므로 스트링으로 모두 받고 리스트로 만드는 로직을 만들어야함!
-         */
+    public ResponseEntity savePost(@Validated PostSaveDto postSaveDto, @RequestPart(value = "files") List<MultipartFile> multipartFiles, HttpServletRequest request) throws ServletException, IOException {
+        Post savedPost = postService.save(request, postSaveDto);
+        hashtagService.save(request, savedPost);
+        imageService.save(multipartFiles, request, savedPost);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/my-post")
-    public ResponseEntity<List<Post>> findMyPost(HttpServletRequest request) {
-        String nickname = (String) request.getAttribute("nickname");
-        Member findMember = memberService.findByNickname(nickname);
-        List<Post> myPost = postService.findMyPost(findMember);
-        return new ResponseEntity(myPost, HttpStatus.OK);
+    public ResponseEntity<List<PostShowDto>> findMyPost(HttpServletRequest request) throws IOException {
+        List<PostShowDto> postShowDtoList = postService.showMyPost(request);
+        return new ResponseEntity<List<PostShowDto>>(postShowDtoList, HttpStatus.OK);
     }
 
 }
