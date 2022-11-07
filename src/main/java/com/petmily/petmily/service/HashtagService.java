@@ -24,7 +24,7 @@ public class HashtagService {
     @Transactional
     public void save(HttpServletRequest request, Post post) {
         String[] hashtags = request.getParameterValues("hashtag");
-        if (hashtags.length != 0) {
+        if (hashtags != null && hashtags.length != 0) {
             for (String hashtagName : hashtags) {
                 Hashtag hashtag = Hashtag.getHashtag(hashtagName, post);
                 hashtagRepository.save(hashtag);

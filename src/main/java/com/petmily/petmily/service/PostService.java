@@ -50,9 +50,13 @@ public class PostService {
         for (int i = 0; i < myPosts.size(); i++) {
             Post post = myPosts.get(i);
             List<Hashtag> hashtags = hashtagService.findByPost(post);
+            List<String> hashtagList = new ArrayList<>();
+            for (Hashtag hashtag : hashtags) {
+                hashtagList.add(hashtag.getHashtagName());
+            }
             List<Image> images = imageService.findByPost(post);
             List<byte[]> imageArray = imageService.getListByteArray(images);
-            postShowDtoList.add(new PostShowDto(hashtags, post.getContent(), imageArray));
+            postShowDtoList.add(new PostShowDto(hashtagList, post.getContent(), imageArray));
         }
         return postShowDtoList;
     }

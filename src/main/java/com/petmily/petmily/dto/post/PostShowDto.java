@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PostShowDto {
 
-    private List<Hashtag> hashtagList = new ArrayList<>();
+    private List<String> hashtagList = new ArrayList<>();
     private String content;
     private List<byte[]> resourceList = new ArrayList<>();
 }

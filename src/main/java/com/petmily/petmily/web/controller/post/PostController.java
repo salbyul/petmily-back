@@ -33,7 +33,9 @@ public class PostController {
     private final ImageService imageService;
 
     @PostMapping("/save")
-    public ResponseEntity savePost(@Validated PostSaveDto postSaveDto, @RequestPart(value = "files") List<MultipartFile> multipartFiles, HttpServletRequest request) throws ServletException, IOException {
+    public ResponseEntity savePost(PostSaveDto postSaveDto, @RequestPart(value = "files") List<MultipartFile> multipartFiles, HttpServletRequest request) throws IOException {
+        if (multipartFiles.isEmpty()) throw new IllegalStateException("이미지는 필수!!");
+        if (postSaveDto.getContent().equals("")) throw new IllegalStateException("내용은 필수!!");
         Post savedPost = postService.save(request, postSaveDto);
         hashtagService.save(request, savedPost);
         imageService.save(multipartFiles, request, savedPost);
