@@ -21,4 +21,7 @@ public class MemberProfileDto {
     @NotBlank
     private String nickname;
     private String statusMessage;
+
+    @NotNull
+    private Boolean isFollower;
 }

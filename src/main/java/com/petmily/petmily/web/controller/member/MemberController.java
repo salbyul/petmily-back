@@ -4,6 +4,7 @@ import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.dto.member.MemberModifyDto;
 import com.petmily.petmily.dto.member.MemberProfileDto;
 import com.petmily.petmily.dto.member.MemberSidebarDto;
+import com.petmily.petmily.service.FollowService;
 import com.petmily.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
+    private final FollowService followService;
 
     @GetMapping
     public MemberSidebarDto member(HttpServletRequest request) {
@@ -43,19 +46,13 @@ public class MemberController {
     }
 
     @GetMapping("/detail")
-    public MemberProfileDto detail(String nickname) {
-        return memberService.nicknameToProfileDto(nickname);
-    }
-
-    @GetMapping("/my-detail")
-    public MemberProfileDto myDetail(HttpServletRequest request, @RequestParam(value = "m", required = false) String targetNickname) {
+    public MemberProfileDto Detail(HttpServletRequest request, @RequestParam(value = "m", required = false) String targetNickname) {
+        String nickname = (String) request.getAttribute("nickname");
         log.info("targetNickname: {}", targetNickname);
         if (targetNickname != null) {
-            Member findMember = memberService.findByNickname(targetNickname);
-            return memberService.nicknameToProfileDto(targetNickname);
+            return memberService.nicknameToProfileDto(nickname, targetNickname);
         }
-        String nickname = (String) request.getAttribute("nickname");
-        return memberService.nicknameToProfileDto(nickname);
+        return memberService.nicknameToProfileDto(nickname, null);
     }
 
     @PutMapping("/my-detail/modify")
@@ -63,5 +60,15 @@ public class MemberController {
         String nickname = (String) request.getAttribute("nickname");
         memberService.modifyMember(nickname, memberModifyDto);
         return new ResponseEntity("ok", HttpStatus.OK);
+    }
+
+    @PutMapping("/detail/follow")
+    public ResponseEntity follow(HttpServletRequest request, @RequestBody HashMap<String, Object> map) {
+        String nickname = (String) request.getAttribute("nickname");
+        String email = (String) map.get("email");
+        Member targetMember = memberService.findByEmail(email);
+        Member findMember = memberService.findByNickname(nickname);
+        followService.follow(findMember, targetMember);
+        return ResponseEntity.ok().build();
     }
 }

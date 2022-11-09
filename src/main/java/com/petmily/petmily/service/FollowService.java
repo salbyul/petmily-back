@@ -32,4 +32,14 @@ public class FollowService {
     public void unFollow(Member member, Member targetMember) {
         followRepository.remove(member, targetMember);
     }
+
+    public boolean isFollow(Member member, Member targetMember) {
+        List<Follow> allFollow = followRepository.findAll(member);
+        for (Follow follow : allFollow) {
+            if (follow.getTargetMember() == targetMember) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

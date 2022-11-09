@@ -8,44 +8,50 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/follow")
 public class FollowController {
 
     private final FollowService followService;
     private final MemberService memberService;
 
-    @GetMapping("/follow/find-all")
-    public List<Follow> followList(HttpServletRequest request) {
+    @GetMapping("/find-all")
+    public Object followList(HttpServletRequest request) {
         String nickname = (String) request.getAttribute("nickname");
+        log.info("findAll");
         log.info("nickname : {}", nickname);
-        return followService.findAll(memberService.findByNickname(nickname));
+        List<Follow> all = followService.findAll(memberService.findByNickname(nickname));
+        for (Follow follow : all) {
+            System.out.println("name: " + follow.getTargetMember().getNickname());
+        }
+        return all;
     }
 
     @PostMapping("/follow")
-    public ResponseEntity follow(HttpServletRequest request, String targetMember) {
+    public ResponseEntity follow(HttpServletRequest request, @RequestBody Map<String, Object> map) {
         String nickname = (String) request.getAttribute("nickname");
+        String email = (String) map.get("email");
+        Member targetMember = memberService.findByEmail(email);
         Member findMember = memberService.findByNickname(nickname);
-        Member findTargetMember = memberService.findByNickname(targetMember);
-        followService.follow(findMember, findTargetMember);
-        return new ResponseEntity(HttpStatus.OK);
+        followService.follow(findMember, targetMember);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/follow/unfollow")
-    public ResponseEntity unfollow(HttpServletRequest request, String targetMember) {
+    @PutMapping("/unfollow")
+    public ResponseEntity unfollow(HttpServletRequest request, @RequestBody Map<String, Object> map) {
         String nickname = (String) request.getAttribute("nickname");
         Member findMember = memberService.findByNickname(nickname);
-        Member findTargetMember = memberService.findByNickname(targetMember);
-        followService.unFollow(findMember, findTargetMember);
+        String email = (String) map.get("email");
+        Member targetMember = memberService.findByEmail(email);
+        followService.unFollow(findMember, targetMember);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

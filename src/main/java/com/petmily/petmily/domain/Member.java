@@ -1,6 +1,7 @@
 package com.petmily.petmily.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.petmily.petmily.dto.member.MemberJoinDto;
 import lombok.Getter;

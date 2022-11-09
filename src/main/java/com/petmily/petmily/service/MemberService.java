@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -22,6 +21,7 @@ public class MemberService {
 
     private final IMemberRepository memberRepository;
     private final JwtTokenProvider tokenProvider;
+    private final FollowService followService;
 
     @Transactional
     public Long join(MemberJoinDto memberDto) {
@@ -84,9 +84,14 @@ public class MemberService {
         return memberRepository.findAllByNicknameExceptMe(nickname, target);
     }
 
-    public MemberProfileDto nicknameToProfileDto(String nickname) {
+    public MemberProfileDto nicknameToProfileDto(String nickname, String targetNickname) {
         Member findMember = findByNickname(nickname);
-        return new MemberProfileDto(findMember.getEmail(), findMember.getNickname(), findMember.getStatusMessage());
+        if (targetNickname != null) {
+            Member targetMember = findByNickname(targetNickname);
+            boolean isFollow = followService.isFollow(findMember, targetMember);
+            return new MemberProfileDto(targetMember.getEmail(), targetMember.getNickname(), targetMember.getStatusMessage(), isFollow);
+        }
+        return new MemberProfileDto(findMember.getEmail(), findMember.getNickname(), findMember.getStatusMessage(), null);
     }
 
     @Transactional

@@ -2,8 +2,6 @@ package com.petmily.petmily.service;
 
 import com.petmily.petmily.domain.Hashtag;
 import com.petmily.petmily.domain.Post;
-import com.petmily.petmily.dto.hashtag.HashtagSaveDto;
-import com.petmily.petmily.repository.HashtagJpaRepository;
 import com.petmily.petmily.repository.IHashtagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
