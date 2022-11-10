@@ -46,4 +46,9 @@ public class PostController {
         return new ResponseEntity<List<PostShowDto>>(postShowDtoList, HttpStatus.OK);
     }
 
+    @GetMapping("/all-post")
+    public ResponseEntity<List<PostShowDto>> findAllPost(HttpServletRequest request) throws IOException {
+        List<PostShowDto> postShowDtoList = postService.showAllPost(request);
+        return new ResponseEntity<>(postShowDtoList, HttpStatus.OK);
+    }
 }

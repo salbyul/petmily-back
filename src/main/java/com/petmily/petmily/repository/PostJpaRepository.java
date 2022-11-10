@@ -26,7 +26,7 @@ public class PostJpaRepository implements IPostRepository{
     }
 
     @Override
-    public List<Post> findAllMine(Member member) {
+    public List<Post> findAllByMember(Member member) {
         return em.createQuery("select p from Post p where p.member = :member", Post.class)
                 .setParameter("member", member)
                 .getResultList();

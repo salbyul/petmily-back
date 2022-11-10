@@ -1,27 +1,20 @@
 package com.petmily.petmily.service;
 
-import com.petmily.petmily.domain.Hashtag;
-import com.petmily.petmily.domain.Image;
-import com.petmily.petmily.domain.Member;
-import com.petmily.petmily.domain.Post;
+import com.petmily.petmily.domain.*;
 import com.petmily.petmily.dto.post.PostSaveDto;
 import com.petmily.petmily.dto.post.PostShowDto;
-import com.petmily.petmily.exception.member.MemberException;
-import com.petmily.petmily.repository.IHashtagRepository;
-import com.petmily.petmily.repository.IImageRepository;
 import com.petmily.petmily.repository.IMemberRepository;
 import com.petmily.petmily.repository.IPostRepository;
 import com.petmily.petmily.security.JwtTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -34,6 +27,7 @@ public class PostService {
     private final IMemberRepository memberRepository;
     private final HashtagService hashtagService;
     private final ImageService imageService;
+    private final FollowService followService;
 
     @Transactional
     public Post save(HttpServletRequest request, PostSaveDto postSaveDto) {
@@ -44,25 +38,61 @@ public class PostService {
     }
 
     public List<PostShowDto> showMyPost(HttpServletRequest request) throws IOException {
+        List<PostShowDto> allPost = new ArrayList<>();
         Member findMember = findMemberByNickname(request);
-        List<Post> myPosts = postRepository.findAllMine(findMember);
-        List<PostShowDto> postShowDtoList = new ArrayList<>();
-        for (int i = 0; i < myPosts.size(); i++) {
-            Post post = myPosts.get(i);
-            List<Hashtag> hashtags = hashtagService.findByPost(post);
-            List<String> hashtagList = new ArrayList<>();
-            for (Hashtag hashtag : hashtags) {
-                hashtagList.add(hashtag.getHashtagName());
-            }
-            List<Image> images = imageService.findByPost(post);
-            List<byte[]> imageArray = imageService.getListByteArray(images);
-            postShowDtoList.add(new PostShowDto(hashtagList, post.getContent(), imageArray));
+        List<Post> findPosts = postRepository.findAllByMember(findMember);
+        for (Post findPost : findPosts) {
+            PostShowDto postShowDto = getPostShowDto(findPost);
+            allPost.add(postShowDto);
         }
-        return postShowDtoList;
+        Collections.sort(allPost);
+        return allPost;
+    }
+
+    public List<PostShowDto> showAllPost(HttpServletRequest request) throws IOException {
+        List<PostShowDto> allPost = new ArrayList<>();
+        Member findMember = findMemberByNickname(request);
+        List<Post> postList = findMember.getPostList();
+        List<Follow> followList = followService.findAll(findMember);
+        List<Member> myFriend = new ArrayList<>();
+
+        for (Post post : postList) {
+            PostShowDto postShowDto = getPostShowDto(post);
+            allPost.add(postShowDto);
+        }
+        addMyFriend(followList, myFriend);
+        for (Member member : myFriend) {
+            List<Post> postByMember = postRepository.findAllByMember(member);
+            for (Post post : postByMember) {
+                PostShowDto postDto = getPostShowDto(post);
+                allPost.add(postDto);
+            }
+        }
+        Collections.sort(allPost);
+        return allPost;
+    }
+
+    private PostShowDto getPostShowDto(Post post) throws IOException {
+        List<String> hashtags = new ArrayList<>();
+        List<Hashtag> hashtagList = post.getHashtag();
+        List<Image> imageList = post.getImageList();
+        List<byte[]> images = imageService.getListByteArray(imageList);
+        for (Hashtag hashtag : hashtagList) {
+            hashtags.add(hashtag.getHashtagName());
+        }
+        PostShowDto postDto = new PostShowDto(post.getMember().getNickname(), hashtags, post.getContent(), images, post.getCreatedDate());
+        return postDto;
+    }
+
+    private void addMyFriend(List<Follow> followList, List<Member> myFriend) {
+        for (Follow follow : followList) {
+            Member targetMember = follow.getTargetMember();
+            myFriend.add(targetMember);
+        }
     }
 
     private List<Post> findMyPost(Member member) {
-        return postRepository.findAllMine(member);
+        return postRepository.findAllByMember(member);
     }
 
     private Member findMemberByNickname(HttpServletRequest request) {
@@ -73,5 +103,4 @@ public class PostService {
         }
         return findMembers.get(0);
     }
-
 }
