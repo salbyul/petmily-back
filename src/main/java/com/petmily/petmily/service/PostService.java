@@ -28,6 +28,7 @@ public class PostService {
     private final HashtagService hashtagService;
     private final ImageService imageService;
     private final FollowService followService;
+    private final LikeService likeService;
 
     @Transactional
     public Post save(HttpServletRequest request, PostSaveDto postSaveDto) {
@@ -42,7 +43,8 @@ public class PostService {
         Member findMember = findMemberByNickname(request);
         List<Post> findPosts = postRepository.findAllByMember(findMember);
         for (Post findPost : findPosts) {
-            PostShowDto postShowDto = getPostShowDto(findPost);
+            boolean isLike = likeService.checkLike(request, findPost.getId());
+            PostShowDto postShowDto = getPostShowDto(findPost, isLike);
             allPost.add(postShowDto);
         }
         Collections.sort(allPost);
@@ -56,15 +58,18 @@ public class PostService {
         List<Follow> followList = followService.findAll(findMember);
         List<Member> myFriend = new ArrayList<>();
 
+
         for (Post post : postList) {
-            PostShowDto postShowDto = getPostShowDto(post);
+            boolean isLike = likeService.checkLike(request, post.getId());
+            PostShowDto postShowDto = getPostShowDto(post, isLike);
             allPost.add(postShowDto);
         }
         addMyFriend(followList, myFriend);
         for (Member member : myFriend) {
             List<Post> postByMember = postRepository.findAllByMember(member);
             for (Post post : postByMember) {
-                PostShowDto postDto = getPostShowDto(post);
+                boolean isLike = likeService.checkLike(request, post.getId());
+                PostShowDto postDto = getPostShowDto(post, isLike);
                 allPost.add(postDto);
             }
         }
@@ -72,7 +77,7 @@ public class PostService {
         return allPost;
     }
 
-    private PostShowDto getPostShowDto(Post post) throws IOException {
+    private PostShowDto getPostShowDto(Post post, boolean isLike) throws IOException {
         List<String> hashtags = new ArrayList<>();
         List<Hashtag> hashtagList = post.getHashtag();
         List<Image> imageList = post.getImageList();
@@ -80,7 +85,7 @@ public class PostService {
         for (Hashtag hashtag : hashtagList) {
             hashtags.add(hashtag.getHashtagName());
         }
-        PostShowDto postDto = new PostShowDto(post.getMember().getNickname(), hashtags, post.getContent(), images, post.getCreatedDate());
+        PostShowDto postDto = new PostShowDto(post.getId(), post.getMember().getNickname(), hashtags, post.getContent(), images, isLike, post.getCreatedDate());
         return postDto;
     }
 

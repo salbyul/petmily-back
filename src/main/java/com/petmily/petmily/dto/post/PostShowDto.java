@@ -14,10 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 public class PostShowDto implements Comparable<PostShowDto>{
 
+    private Long id;
     private String author;
     private List<String> hashtagList = new ArrayList<>();
     private String content;
     private List<byte[]> resourceList = new ArrayList<>();
+    private Boolean isLike;
     private LocalDateTime createdDate;
 
     @Override

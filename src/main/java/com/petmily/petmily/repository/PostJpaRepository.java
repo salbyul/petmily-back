@@ -33,6 +33,17 @@ public class PostJpaRepository implements IPostRepository{
     }
 
     @Override
+    public Post findById(Long id) {
+        List<Post> findPosts = em.createQuery("select p from Post p where p.id = :id", Post.class)
+                .setParameter("id", id)
+                .getResultList();
+        if (findPosts.size() != 1) {
+            throw new IllegalArgumentException("FIND BY ID ERROR!!");
+        }
+        return findPosts.get(0);
+    }
+
+    @Override
     public List<Post> findAllFriend(Member member) {
         return null;
     }

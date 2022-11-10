@@ -4,6 +4,7 @@ import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.dto.member.MemberModifyDto;
 import com.petmily.petmily.dto.member.MemberProfileDto;
 import com.petmily.petmily.dto.member.MemberSidebarDto;
+import com.petmily.petmily.exception.member.MemberException;
 import com.petmily.petmily.service.FollowService;
 import com.petmily.petmily.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,8 @@ public class MemberController {
         return memberService.MemberSidebarDtoToMember(findMember);
     }
 
-    @GetMapping("/find-all")
-    public List<Member> findAll(HttpServletRequest request, String target) {
+    @GetMapping("/find-member")
+    public List<Member> findMember(HttpServletRequest request, String target) {
         String nickname = (String) request.getAttribute("nickname");
         List<Member> findMembers = memberService.findAllByNicknameExceptMe(nickname, target);
         log.info("members.size(): {}", findMembers.size());

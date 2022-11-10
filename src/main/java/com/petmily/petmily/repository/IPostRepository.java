@@ -9,6 +9,8 @@ public interface IPostRepository {
 
     void save(Post post);
 
+    Post findById(Long id);
+
     void delete(Post post);
 
     /**
