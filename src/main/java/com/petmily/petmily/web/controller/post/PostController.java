@@ -48,7 +48,7 @@ public class PostController {
 
     @GetMapping("/all-post")
     public ResponseEntity<List<PostShowDto>> findAllPost(HttpServletRequest request) throws IOException {
-        List<PostShowDto> postShowDtoList = postService.showAllPost(request);
+        List<PostShowDto> postShowDtoList = postService.showPostWithFollow(request);
         return new ResponseEntity<>(postShowDtoList, HttpStatus.OK);
     }
 }

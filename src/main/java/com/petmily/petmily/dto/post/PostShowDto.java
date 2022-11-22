@@ -1,6 +1,5 @@
 package com.petmily.petmily.dto.post;
 
-import com.petmily.petmily.domain.Hashtag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +19,7 @@ public class PostShowDto implements Comparable<PostShowDto>{
     private String content;
     private List<byte[]> resourceList = new ArrayList<>();
     private Boolean isLike;
+    private Boolean isBookmark;
     private LocalDateTime createdDate;
 
     @Override

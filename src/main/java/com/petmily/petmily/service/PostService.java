@@ -3,6 +3,7 @@ package com.petmily.petmily.service;
 import com.petmily.petmily.domain.*;
 import com.petmily.petmily.dto.post.PostSaveDto;
 import com.petmily.petmily.dto.post.PostShowDto;
+import com.petmily.petmily.repository.IBookmarkRepository;
 import com.petmily.petmily.repository.IMemberRepository;
 import com.petmily.petmily.repository.IPostRepository;
 import com.petmily.petmily.security.JwtTokenException;
@@ -29,6 +30,7 @@ public class PostService {
     private final ImageService imageService;
     private final FollowService followService;
     private final LikeService likeService;
+    private final IBookmarkRepository bookmarkRepository;
 
     @Transactional
     public Post save(HttpServletRequest request, PostSaveDto postSaveDto) {
@@ -38,20 +40,35 @@ public class PostService {
         return post;
     }
 
+    public Post findById(Long postId) {
+        return postRepository.findById(postId);
+    }
+
     public List<PostShowDto> showMyPost(HttpServletRequest request) throws IOException {
         List<PostShowDto> allPost = new ArrayList<>();
         Member findMember = findMemberByNickname(request);
         List<Post> findPosts = postRepository.findAllByMember(findMember);
         for (Post findPost : findPosts) {
             boolean isLike = likeService.checkLike(request, findPost.getId());
-            PostShowDto postShowDto = getPostShowDto(findPost, isLike);
+            boolean isBookmark = false;
+            if (bookmarkRepository.findByMemberPost(findMember, findPost).size() == 1) {
+                isBookmark = true;
+            }
+
+            PostShowDto postShowDto = getPostShowDto(findPost, isLike, isBookmark);
             allPost.add(postShowDto);
         }
         Collections.sort(allPost);
         return allPost;
     }
 
-    public List<PostShowDto> showAllPost(HttpServletRequest request) throws IOException {
+    /**
+     * 친구 & 내 포스트 리턴
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    public List<PostShowDto> showPostWithFollow(HttpServletRequest request) throws IOException {
         List<PostShowDto> allPost = new ArrayList<>();
         Member findMember = findMemberByNickname(request);
         List<Post> postList = findMember.getPostList();
@@ -61,7 +78,11 @@ public class PostService {
 
         for (Post post : postList) {
             boolean isLike = likeService.checkLike(request, post.getId());
-            PostShowDto postShowDto = getPostShowDto(post, isLike);
+            boolean isBookmark = false;
+            if (bookmarkRepository.findByMemberPost(findMember, post).size() == 1) {
+                isBookmark = true;
+            }
+            PostShowDto postShowDto = getPostShowDto(post, isLike, isBookmark);
             allPost.add(postShowDto);
         }
         addMyFriend(followList, myFriend);
@@ -69,7 +90,11 @@ public class PostService {
             List<Post> postByMember = postRepository.findAllByMember(member);
             for (Post post : postByMember) {
                 boolean isLike = likeService.checkLike(request, post.getId());
-                PostShowDto postDto = getPostShowDto(post, isLike);
+                boolean isBookmark = false;
+                if (bookmarkRepository.findByMemberPost(findMember, post).size() == 1) {
+                    isBookmark = true;
+                }
+                PostShowDto postDto = getPostShowDto(post, isLike, isBookmark);
                 allPost.add(postDto);
             }
         }
@@ -77,7 +102,7 @@ public class PostService {
         return allPost;
     }
 
-    private PostShowDto getPostShowDto(Post post, boolean isLike) throws IOException {
+    private PostShowDto getPostShowDto(Post post, boolean isLike, boolean isBookmark) throws IOException {
         List<String> hashtags = new ArrayList<>();
         List<Hashtag> hashtagList = post.getHashtag();
         List<Image> imageList = post.getImageList();
@@ -85,7 +110,7 @@ public class PostService {
         for (Hashtag hashtag : hashtagList) {
             hashtags.add(hashtag.getHashtagName());
         }
-        PostShowDto postDto = new PostShowDto(post.getId(), post.getMember().getNickname(), hashtags, post.getContent(), images, isLike, post.getCreatedDate());
+        PostShowDto postDto = new PostShowDto(post.getId(), post.getMember().getNickname(), hashtags, post.getContent(), images, isLike, isBookmark, post.getCreatedDate());
         return postDto;
     }
 

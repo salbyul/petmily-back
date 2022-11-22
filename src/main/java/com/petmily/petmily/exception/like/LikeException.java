@@ -1,4 +1,4 @@
-package com.petmily.petmily.exception;
+package com.petmily.petmily.exception.like;
 
 public class LikeException extends RuntimeException{
     public LikeException() {

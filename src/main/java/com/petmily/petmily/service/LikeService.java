@@ -3,7 +3,7 @@ package com.petmily.petmily.service;
 import com.petmily.petmily.domain.Like;
 import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.domain.Post;
-import com.petmily.petmily.exception.LikeException;
+import com.petmily.petmily.exception.like.LikeException;
 import com.petmily.petmily.repository.ILikeRepository;
 import com.petmily.petmily.repository.IPostRepository;
 import lombok.RequiredArgsConstructor;
