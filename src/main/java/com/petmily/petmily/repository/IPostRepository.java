@@ -1,5 +1,6 @@
 package com.petmily.petmily.repository;
 
+import com.petmily.petmily.domain.Hashtag;
 import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.domain.Post;
 
@@ -27,5 +28,4 @@ public interface IPostRepository {
      */
     List<Post> findAllFriend(Member member);
 
-    List<Post> findByHashtag(String hashtag);
 }

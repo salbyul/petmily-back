@@ -21,14 +21,14 @@ public class HashtagJpaRepository implements IHashtagRepository{
 
     @Override
     public List<Hashtag> findByPost(Post post) {
-        return em.createQuery("select h from Hashtag h where h.post = :post")
+        return em.createQuery("select h from Hashtag h where h.post = :post", Hashtag.class)
                 .setParameter("post", post)
                 .getResultList();
     }
 
     @Override
     public List<Hashtag> findByHashtagName(String hashtagName) {
-        return em.createQuery("select h from Hashtag h where h.hashtagName = :hashtagName")
+        return em.createQuery("select h from Hashtag h where h.hashtagName = :hashtagName", Hashtag.class)
                 .setParameter("hashtagName", hashtagName)
                 .getResultList();
     }

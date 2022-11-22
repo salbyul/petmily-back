@@ -1,6 +1,6 @@
 package com.petmily.petmily.web.controller.post;
 
-import com.petmily.petmily.domain.Member;
+import com.petmily.petmily.domain.Hashtag;
 import com.petmily.petmily.domain.Post;
 import com.petmily.petmily.dto.post.PostSaveDto;
 import com.petmily.petmily.dto.post.PostShowDto;
@@ -49,6 +49,12 @@ public class PostController {
     @GetMapping("/all-post")
     public ResponseEntity<List<PostShowDto>> findAllPost(HttpServletRequest request) throws IOException {
         List<PostShowDto> postShowDtoList = postService.showPostWithFollow(request);
+        return new ResponseEntity<>(postShowDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<PostShowDto>> searchPost(HttpServletRequest request, @RequestParam(value = "s", required = false) String input) throws IOException {
+        List<PostShowDto> postShowDtoList = postService.findByHashtagName(request, input);
         return new ResponseEntity<>(postShowDtoList, HttpStatus.OK);
     }
 }

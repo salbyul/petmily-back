@@ -1,5 +1,6 @@
 package com.petmily.petmily.repository;
 
+import com.petmily.petmily.domain.Hashtag;
 import com.petmily.petmily.domain.Member;
 import com.petmily.petmily.domain.Post;
 import lombok.RequiredArgsConstructor;
@@ -45,11 +46,6 @@ public class PostJpaRepository implements IPostRepository{
 
     @Override
     public List<Post> findAllFriend(Member member) {
-        return null;
-    }
-
-    @Override
-    public List<Post> findByHashtag(String hashtag) {
         return null;
     }
 }

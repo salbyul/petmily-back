@@ -34,7 +34,7 @@ public class HashtagService {
         return hashtagRepository.findByPost(post);
     }
 
-    public List<Hashtag> findByHashtagName(String hashtagName) {
+    public List<Hashtag> findHashtagByHashtagName(String hashtagName) {
         return hashtagRepository.findByHashtagName(hashtagName);
     }
 

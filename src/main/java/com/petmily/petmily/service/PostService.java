@@ -34,7 +34,7 @@ public class PostService {
 
     @Transactional
     public Post save(HttpServletRequest request, PostSaveDto postSaveDto) {
-        Member findMember = findMemberByNickname(request);
+        Member findMember = findMemberByRequest(request);
         Post post = Post.getPost(postSaveDto, findMember);
         postRepository.save(post);
         return post;
@@ -46,7 +46,7 @@ public class PostService {
 
     public List<PostShowDto> showMyPost(HttpServletRequest request) throws IOException {
         List<PostShowDto> allPost = new ArrayList<>();
-        Member findMember = findMemberByNickname(request);
+        Member findMember = findMemberByRequest(request);
         List<Post> findPosts = postRepository.findAllByMember(findMember);
         for (Post findPost : findPosts) {
             boolean isLike = likeService.checkLike(request, findPost.getId());
@@ -70,7 +70,7 @@ public class PostService {
      */
     public List<PostShowDto> showPostWithFollow(HttpServletRequest request) throws IOException {
         List<PostShowDto> allPost = new ArrayList<>();
-        Member findMember = findMemberByNickname(request);
+        Member findMember = findMemberByRequest(request);
         List<Post> postList = findMember.getPostList();
         List<Follow> followList = followService.findAll(findMember);
         List<Member> myFriend = new ArrayList<>();
@@ -102,6 +102,30 @@ public class PostService {
         return allPost;
     }
 
+    /**
+     * 해쉬태그로 포스트찾기
+     * @param request
+     * @param hashtagName
+     * @return
+     * @throws IOException
+     */
+    public List<PostShowDto> findByHashtagName(HttpServletRequest request, String hashtagName) throws IOException {
+        List<PostShowDto> result = new ArrayList<>();
+        Member findMember = findMemberByRequest(request);
+        List<Hashtag> hashtagByHashtagName = hashtagService.findHashtagByHashtagName(hashtagName);
+        for (Hashtag hashtag : hashtagByHashtagName) {
+            Post post = hashtag.getPost();
+            boolean isLike = likeService.checkLike(request, post.getId());
+            boolean isBookmark = false;
+            if (bookmarkRepository.findByMemberPost(findMember, post).size() == 1) {
+                isBookmark = true;
+            }
+            PostShowDto postShowDto = getPostShowDto(post, isLike, isBookmark);
+            result.add(postShowDto);
+        }
+        return result;
+    }
+
     private PostShowDto getPostShowDto(Post post, boolean isLike, boolean isBookmark) throws IOException {
         List<String> hashtags = new ArrayList<>();
         List<Hashtag> hashtagList = post.getHashtag();
@@ -125,7 +149,7 @@ public class PostService {
         return postRepository.findAllByMember(member);
     }
 
-    private Member findMemberByNickname(HttpServletRequest request) {
+    private Member findMemberByRequest(HttpServletRequest request) {
         String nickname = (String) request.getAttribute("nickname");
         List<Member> findMembers = memberRepository.findByNickname(nickname);
         if (findMembers.size() != 1) {
