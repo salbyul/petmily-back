@@ -117,4 +117,10 @@ public class MemberService {
     public MemberSidebarDto MemberSidebarDtoToMember(Member member) {
         return new MemberSidebarDto(member.getNickname(), member.getStatusMessage());
     }
+
+    @Transactional
+    public Long changePassword(Member member, String password) {
+        memberRepository.modifyPassword(member, password);
+        return member.getId();
+    }
 }

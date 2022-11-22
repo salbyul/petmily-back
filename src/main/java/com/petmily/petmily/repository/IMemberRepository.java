@@ -15,4 +15,6 @@ public interface IMemberRepository {
     List<Member> findByNickname(String nickname);
 
     List<Member> findAllByNicknameExceptMe(String nickname, String targetNickname);
+
+    void modifyPassword(Member member, String password);
 }

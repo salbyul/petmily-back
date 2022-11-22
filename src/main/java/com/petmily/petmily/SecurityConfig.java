@@ -32,7 +32,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/logout", "/join").permitAll()
+                .antMatchers("/", "/login", "/logout", "/join", "/find-password").permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .anyRequest().authenticated()
                 .and()
